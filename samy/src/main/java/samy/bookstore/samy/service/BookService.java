@@ -10,6 +10,7 @@ import samy.bookstore.samy.domain.Book;
 import samy.bookstore.samy.dto.BookCreateCommand;
 import samy.bookstore.samy.dto.BookInfo;
 import samy.bookstore.samy.dto.BookInfoWithoutAuthorId;
+import samy.bookstore.samy.exceptionhnadling.BookNotFoundByAuthorException;
 import samy.bookstore.samy.exceptionhnadling.BookNotFoundByIdException;
 import samy.bookstore.samy.repository.BookRepository;
 
@@ -56,5 +57,17 @@ public class BookService {
         List<Book> books = bookRepository.findAll();
         return books.stream()
                 .map(book -> modelMapper.map(book, BookInfoWithoutAuthorId.class)).toList();
+    }
+
+    public List<BookInfo> findByName(String authorName) {
+        List<Book> books = bookRepository.findByName(authorName);
+        return books.stream()
+                .map(book -> {
+                    BookInfo bookInfo = modelMapper.map(book, BookInfo.class);
+                    bookInfo.setAuthorId(Math.toIntExact(book.getAuthor().getId()));
+                    return bookInfo;
+                })
+                .collect(Collectors.toList());
+
     }
 }

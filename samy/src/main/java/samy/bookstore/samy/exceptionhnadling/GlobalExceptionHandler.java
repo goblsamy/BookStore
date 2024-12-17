@@ -42,14 +42,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(List.of(validationError), HttpStatus.BAD_REQUEST);
     }
 
-//
-//    @ExceptionHandler(CurrentIdAndGivenMatchesException.class)
-//    public ResponseEntity<List<ValidationError>> handleCurrentIdAndGivenMatchesException(CurrentIdAndGivenMatchesException exception) {
-//        ValidationError validationError = new ValidationError("Id",
-//                "Current club id and given is the same: " + exception.getId());
-//        log.error("Error in validation: " + validationError.getField() + ": " + validationError.getErrorMessage());
-//        return new ResponseEntity<>(List.of(validationError), HttpStatus.BAD_REQUEST);
-//    }
+    @ExceptionHandler(BookNotFoundByAuthorException.class)
+    public ResponseEntity<List<ValidationError>> handleBookNotFoundByAuthorException(BookNotFoundByAuthorException exception) {
+        ValidationError validationError = new ValidationError("Name",
+                "Cannot find author with name: " + exception.getAuthorName());
+        log.error("Error in validation: " + validationError.getField() + ": " + validationError.getErrorMessage());
+        return new ResponseEntity<>(List.of(validationError), HttpStatus.BAD_REQUEST);
+    }
+
 //
 //    @ExceptionHandler(PlayerNotFoundByIdException.class)
 //    public ResponseEntity<List<ValidationError>> handlePlayerNotFoundByIdException(PlayerNotFoundByIdException exception) {

@@ -37,9 +37,9 @@ public class BookController {
         return new ResponseEntity<>(bookInfo, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{bookId}")
+    @GetMapping("/id/{bookId}")
     public ResponseEntity<BookInfo> findBookById(@PathVariable("bookId") Integer bookId) {
-        log.info("HTTP req GET /api/books, with id: " + bookId);
+        log.info("HTTP req GET /api/books/id, with id: " + bookId);
         BookInfo bookInfo = bookService.findById(bookId);
         return new ResponseEntity<>(bookInfo, HttpStatus.OK);
     }
@@ -48,6 +48,13 @@ public class BookController {
     public ResponseEntity<List<BookInfoWithoutAuthorId>> findAll() {
         log.info("HTTP req GET /api/books");
         List<BookInfoWithoutAuthorId> bookInfos = bookService.findAll();
+        return new ResponseEntity<>(bookInfos, HttpStatus.OK);
+    }
+
+    @GetMapping("/{authorName}")
+    public ResponseEntity<List<BookInfo>> findBookByAuthorName(@PathVariable("authorName") String authorName) {
+        log.info("HTTP req GET /api/books, with authorName: " + authorName);
+        List<BookInfo> bookInfos = bookService.findByName(authorName);
         return new ResponseEntity<>(bookInfos, HttpStatus.OK);
     }
 }
