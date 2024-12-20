@@ -14,8 +14,8 @@ import samy.bookstore.samy.exceptionhnadling.BookNotFoundByAuthorException;
 import samy.bookstore.samy.exceptionhnadling.BookNotFoundByIdException;
 import samy.bookstore.samy.repository.BookRepository;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,7 +47,7 @@ public class BookService {
     }
 
     public BookInfo findById(Integer bookId) {
-        Book book = bookRepository.findById(Long.valueOf(bookId)).orElseThrow(() -> new BookNotFoundByIdException(bookId));
+        Book book = basicFindById(Long.valueOf(bookId));
         BookInfo bookInfo = modelMapper.map(book, BookInfo.class);
         bookInfo.setAuthorId(Math.toIntExact(book.getAuthor().getId()));
         return bookInfo;
@@ -72,5 +72,24 @@ public class BookService {
                 })
                 .collect(Collectors.toList());
 
+    }
+
+    public List<BookInfo> findBooksBetweenDates(LocalDate fromDate, LocalDate toDate) {
+        List<Book> books = bookRepository.findPublishedDateBetween(fromDate, toDate);
+        return books.stream().map(book -> modelMapper.map(book, BookInfo.class)).toList();
+
+    }
+
+    public BookInfo borrowBook(Long bookId) {
+        Book book = basicFindById(bookId);
+        book.setCopiesAvailable(book.getCopiesAvailable() - 1);
+        BookInfo bookInfo = modelMapper.map(book, BookInfo.class);
+        bookInfo.setAuthorId(Math.toIntExact(book.getAuthor().getId()));
+        return bookInfo;
+    }
+
+    public Book basicFindById(Long bookId) {
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundByIdException(Math.toIntExact(bookId)));
     }
 }

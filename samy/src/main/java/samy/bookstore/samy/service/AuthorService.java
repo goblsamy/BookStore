@@ -10,9 +10,8 @@ import samy.bookstore.samy.dto.AuthorInfo;
 import samy.bookstore.samy.exceptionhnadling.AuthorNotFoundByIdException;
 import samy.bookstore.samy.repository.AuthorRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 
 @Service
@@ -51,5 +50,9 @@ public class AuthorService {
         List<Author> authors = authorRepository.findAll();
         return authors.stream()
                 .map(author -> modelMapper.map(author, AuthorInfo.class)).toList();
+    }
+
+    public void delete(Long id) {
+        authorRepository.delete(findById(Math.toIntExact(id)));
     }
 }

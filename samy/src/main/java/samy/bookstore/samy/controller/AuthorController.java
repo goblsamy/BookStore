@@ -46,4 +46,11 @@ public class AuthorController {
         List<AuthorInfo> authorInfos = authorService.findAll();
         return new ResponseEntity<>(authorInfos, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{authorId}")
+    public ResponseEntity<Void> deleteAuthorById(@PathVariable("authorId") Long id) {
+        log.info("HTTP req DELETE /api/authors, with id: " + id);
+        authorService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

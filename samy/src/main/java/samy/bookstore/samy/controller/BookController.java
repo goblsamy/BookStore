@@ -14,6 +14,7 @@ import samy.bookstore.samy.dto.BookInfo;
 import samy.bookstore.samy.dto.BookInfoWithoutAuthorId;
 import samy.bookstore.samy.service.BookService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -56,5 +57,19 @@ public class BookController {
         log.info("HTTP req GET /api/books, with authorName: " + authorName);
         List<BookInfo> bookInfos = bookService.findByName(authorName);
         return new ResponseEntity<>(bookInfos, HttpStatus.OK);
+    }
+
+    @GetMapping("/{from}/{to}")
+    public ResponseEntity<List<BookInfo>> getBooksBetweenDates(@PathVariable LocalDate from, @PathVariable LocalDate to) {
+        log.info("HTTP req GET /api/books/from/to, with from date: " + from + ", and to date: " + to);
+        List<BookInfo> bookInfos = bookService.findBooksBetweenDates(from, to);
+        return new ResponseEntity<>(bookInfos, HttpStatus.OK);
+    }
+
+    @GetMapping("/borrow/{bookId}")
+    public ResponseEntity<BookInfo> borrowBook(@PathVariable Long bookId) {
+        log.info("HTTP req GET /api/books/id, with bookId: " + bookId);
+        BookInfo bookInfo = bookService.borrowBook(bookId);
+        return new ResponseEntity<>(bookInfo, HttpStatus.OK);
     }
 }
